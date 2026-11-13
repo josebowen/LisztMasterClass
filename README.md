@@ -2,7 +2,7 @@
 
 A short demo for faculty workshops. Walk into Liszt's music room in Weimar, read what he said in his pupils' words, and hear clips from discs two of those pupils made in 1912 and 1922.
 
-Live: https://josebowen.github.io/LisztMasterclass/ . More demos: https://weteachwithai.com/vibe-coding/
+Live: https://josebowen.github.io/LisztMasterClass/ . More demos: https://weteachwithai.com/vibe-coding/
 
 - Research: José Antonio Bowen, "Liszt the Teacher," JALS 52/53 (2002/03). See `data/sources-verified.md`.
 - The gathering is a composite. The room is an illustration.
