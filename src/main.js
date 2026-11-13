@@ -1,93 +1,84 @@
-import { buildScene } from './scene.js';
-import { SOURCES, KIND, PEOPLE, PIECES, TEACHING, ABOUT } from './content.js';
-
+import { PHOTO, PEOPLE, WALL, TOPICS, DISCS, ABOUT, LINKS } from './content.js';
 const $ = s => document.querySelector(s);
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const canvas = $('#c'), panel = $('#panel'), labels = $('#labels');
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const S = buildScene(canvas);
-const state = { view: 'home', id: null, tIndex: 0, answers: {}, played: {}, clipOk: {} };
-const VIEW = { home: [0.32, 0.2], liszt: [-0.25, 0.16], lamond: [0.75, 0.14], dalbert: [0.5, 0.22], fay: [-0.45, 0.18], siloti: [-0.6, 0.14], piano: [0.15, 0.3] };
+const state = { topic: null, idx: 0, disc: null, list: [], clipOk: {} };
+const LAB = { Beethoven: '#7d2a22', Liszt: '#1f4a3a', Chopin: '#27406b', Weber: '#6b4a1e' };
+
+// ---------- build static parts
+$('#group').src = PHOTO.src;
+$('#topics').innerHTML = TOPICS.map(t => `<button type="button" data-topic="${t.id}" aria-pressed="false">${esc(t.label)}</button>`).join('');
+$('#faces').innerHTML = Object.entries(PEOPLE).filter(([, p]) => p.at).map(([k, p]) => `<button type="button" class="face" data-p="${k}" style="left:${p.at[0]}%;top:${p.at[1]}%" aria-label="${esc(p.name)}"><b>${esc(p.short)}</b></button>`).join('');
+const med = k => { const p = PEOPLE[k]; const ini = p.name.split(' ').map(w => w[0]).join('').slice(0, 2); return `<button type="button" class="med" data-p="${k}"><div class="pic"${p.img ? ` style="background-image:url('${p.img.replace(/'/g, '%27')}')"` : ''}>${p.img ? '' : ini}</div><span>${esc(p.short)}</span></button>`; };
+$('#wallL').innerHTML = WALL.left.map(med).join(''); $('#wallR').innerHTML = WALL.right.map(med).join('');
+$('#discs').innerHTML = DISCS.map(d => `<button type="button" class="disc" data-disc="${d.id}" style="--lab:${LAB[d.composer]}"><i></i><div><b>${esc(d.composer)}</b><span>${esc(d.title)}</span><span>${esc(PEOPLE[d.player].short)}, ${d.year}</span></div></button>`).join('');
+const el = k => document.querySelector(`[data-p="${k}"]`);
 
 // ---------- audio
-const audio = new Audio(); audio.preload = 'none'; let actx, analyser, buf, playing = null;
-function setupAudio() { if (actx) return; try { actx = new (window.AudioContext || window.webkitAudioContext)(); const src = actx.createMediaElementSource(audio); analyser = actx.createAnalyser(); analyser.fftSize = 256; buf = new Uint8Array(analyser.frequencyBinCount); src.connect(analyser); analyser.connect(actx.destination); } catch (e) { actx = null; } }
-function toggle(p) {
-  setupAudio(); if (actx && actx.state === 'suspended') actx.resume();
-  if (playing === p.id && !audio.paused) { audio.pause(); return; }
-  if (playing !== p.id) { audio.src = p.clip; playing = p.id; }
-  audio.play().then(() => { state.played[p.id] = true; state.clipOk[p.id] = true; }).catch(() => { state.clipOk[p.id] = false; playing = null; render(); });
+const audio = new Audio(); audio.preload = 'none'; let actx, analyser, buf;
+function setupAudio() { if (actx) return; try { actx = new (window.AudioContext || window.webkitAudioContext)(); const s = actx.createMediaElementSource(audio); analyser = actx.createAnalyser(); analyser.fftSize = 128; buf = new Uint8Array(analyser.frequencyBinCount); s.connect(analyser); analyser.connect(actx.destination); } catch (e) { actx = null; } }
+function playDisc(id) {
+  const d = DISCS.find(x => x.id === id); setupAudio(); if (actx && actx.state === 'suspended') actx.resume();
+  if (state.disc === id) { audio.paused ? audio.play() : audio.pause(); return; }
+  state.disc = id; audio.src = d.clip; audio.play().then(() => { state.clipOk[id] = true; }).catch(() => { state.clipOk[id] = false; sync(); });
+  state.list = d.quotes || TOPICS.find(t => t.id === d.topic).quotes.filter(q => q.disc === id); if (!state.list.length) state.list = TOPICS.find(t => t.id === d.topic).quotes;
+  state.topic = d.quotes ? null : d.topic; state.idx = 0; render();
 }
-audio.addEventListener('error', () => { if (playing) { state.clipOk[playing] = false; playing = null; render(); } });
-['play', 'pause', 'ended'].forEach(e => audio.addEventListener(e, () => { if (e === 'ended') state.played[playing] = true; syncPlayer(e === 'ended'); }));
-function syncPlayer(ended) { const b = $('#playBtn'); if (!b) return; b.textContent = audio.paused ? (ended ? 'Play again' : 'Play the clip') : 'Pause'; if (ended && !$('.ask')) render(); }
+['play', 'pause', 'ended'].forEach(e => audio.addEventListener(e, sync));
+audio.addEventListener('error', () => { if (state.disc) { state.clipOk[state.disc] = false; sync(); } });
+function sync() {
+  document.querySelectorAll('.disc').forEach(b => { b.classList.toggle('on', b.dataset.disc === state.disc); b.classList.toggle('paused', audio.paused); });
+  document.querySelectorAll('.med').forEach(m => m.classList.remove('playing'));
+  const d = DISCS.find(x => x.id === state.disc); if (!d) { $('#nowText').textContent = 'Choose a disc to hear a pupil play.'; return; }
+  if (!audio.paused) el(d.player).classList.add('playing');
+  $('#nowText').innerHTML = state.clipOk[d.id] === false ? 'This clip could not be loaded.' : `<b style="color:var(--gold)">${esc(PEOPLE[d.player].name)}</b> ${audio.paused ? 'played' : 'plays'} ${esc(d.title)}. ${esc(d.part)}. ${esc(d.label)}, ${d.year}, about ${d.gap} years after his lessons.`;
+}
 
-// ---------- panel
-const tabs = () => `<nav class="tabs" aria-label="Sections">${[['home', 'The room'], ['teach', 'How Liszt taught'], ['pieces', 'The recordings'], ['about', 'About']].map(([k, l]) => `<button type="button" data-go="${k}" aria-pressed="${state.view === k || (k === 'pieces' && state.view === 'piece')}">${l}</button>`).join('')}</nav>`;
-const src = k => SOURCES[k].u ? `<a href="${SOURCES[k].u}" target="_blank" rel="noopener">${esc(SOURCES[k].t)}</a>` : esc(SOURCES[k].t);
-function quote(q) {
-  return `<span class="kind ${q.kind}">${KIND[q.kind]}</span><blockquote${q.plain ? ' class="plain"' : ''}>${q.plain ? '' : '“'}${esc(q.text)}${q.plain ? '' : '”'}</blockquote><p class="cite">${esc(q.cite)}${q.who && PEOPLE[q.who] ? '' : ''}</p>${q.note ? `<p class="note">${esc(q.note)}</p>` : ''}`;
-}
-const pieceBtn = p => `<button type="button" class="item" data-piece="${p.id}"><b>${esc(p.composer)}: ${esc(p.title.split(',')[0])}</b><span>${esc(p.part)}. ${esc(PEOPLE[p.player].name)}, ${p.year}</span></button>`;
-function viewHome() { return `<h2>The room</h2><p class="sub">Click a person or the piano in the room, or choose below.</p><h3>People</h3>${Object.entries(PEOPLE).map(([k, p]) => `<button type="button" class="item" data-person="${k}"><b>${esc(p.name)}${p.recorded ? ' ♪' : ''}</b><span>${p.dates}. ${esc(p.role)}</span></button>`).join('')}<p class="sub">♪ made recordings you can hear.</p>`; }
-function viewTeach() { const q = TEACHING[state.tIndex]; return `<h2>How Liszt taught</h2><p class="sub">Liszt speaks in images. ${state.tIndex + 1} of ${TEACHING.length}.</p><h3>${esc(q.head)}</h3><blockquote${q.plain ? ' class="plain"' : ''}>${q.plain ? '' : '“'}${esc(q.text)}${q.plain ? '' : '”'}</blockquote><p class="cite">${esc(q.who)}. ${esc(q.cite)}</p><p style="margin-top:20px;display:flex;gap:8px"><button type="button" data-t="-1">Previous</button><button type="button" class="primary" data-t="1">Next remark</button></p><h3>Hear his pupils</h3>${PIECES.slice(0, 3).map(pieceBtn).join('')}`; }
-function viewPieces(list, title, sub) { return `<h2>${title}</h2><p class="sub">${sub}</p>${list.map(pieceBtn).join('')}`; }
-function viewPerson(id) {
-  const p = PEOPLE[id]; let h = `<h2>${esc(p.name)}</h2><p class="sub">${p.dates}. ${esc(p.role)}</p>`;
-  const own = PIECES.filter(x => x.player === id); if (own.length) h += `<h3>Recordings</h3>${own.map(pieceBtn).join('')}`;
-  const told = []; PIECES.forEach(x => x.said.forEach(q => { if (q.who === id && !told.some(t => t.q.text === q.text)) told.push({ q, x }); }));
-  if (told.length) h += `<h3>What ${esc(p.name.split(' ').pop())} reported</h3>` + told.map(({ q, x }) => `<blockquote>“${esc(q.text)}”</blockquote><p class="cite">${esc(q.cite)}</p>${q.note ? `<p class="note">${esc(q.note)}</p>` : ''}${x.said.indexOf(q) > -1 && q.kind !== 'general' && q.kind !== 'composer' ? `<p class="note"><button type="button" data-piece="${x.id}">Hear ${esc(PEOPLE[x.player].name)} play this</button></p>` : ''}`).join('');
-  return h;
-}
-function viewPiece(id) {
-  const p = PIECES.find(x => x.id === id), pl = PEOPLE[p.player], ok = state.clipOk[id] !== false;
-  let h = `<h2>${esc(p.composer)}</h2><p class="sub">${esc(p.title)}. ${esc(p.part)}.</p><div class="player">`;
-  h += ok ? `<div class="row"><button type="button" class="primary" id="playBtn" data-play="${id}">${playing === id && !audio.paused ? 'Pause' : 'Play the clip'}</button><div class="bar" aria-hidden="true"><i id="prog"></i></div></div>` : `<p style="margin:0">This clip has not been added to the site yet. <a href="${SOURCES[p.src].u}" target="_blank" rel="noopener">Hear the full side at the Internet Archive.</a></p>`;
-  h += `<p class="meta">${esc(pl.name)}, piano. ${esc(p.label)}, recorded ${p.year}. He was ${p.age}. He first played for Liszt about ${p.gap} years earlier.</p></div>`;
-  h += `<h3>What Liszt said</h3>` + p.said.map(quote).join('');
-  if (state.played[id]) { const a = state.answers[id]; h += `<div class="ask"><b>Your ear. Not scored.</b><div>Does this playing fit what you just read?</div><div class="opts">${['Yes', 'In part', 'No'].map(o => `<button type="button" data-ans="${o}" aria-pressed="${a === o}">${o}</button>`).join('')}</div>${a ? `<p>You said: ${a}. ${esc(pl.name)} made this disc ${p.gap} years after his lessons, on a machine that held about four minutes a side. Liszt never heard it.</p>` : ''}</div>`; }
-  h += `<p style="margin-top:22px"><button type="button" data-go="pieces">All recordings</button></p>`; return h;
-}
-function viewAbout() { return `<h2>About and sources</h2>${ABOUT.map(([a, b]) => `<h3>${a}</h3><p style="margin:0">${esc(b)}</p>`).join('')}<h3>Sources</h3><ul class="src">${Object.keys(SOURCES).map(k => `<li>${src(k)}</li>`).join('')}</ul>`; }
+// ---------- bubble
 function render(focus) {
-  let h; const v = state.view;
-  if (v === 'home') h = viewHome(); else if (v === 'teach') h = viewTeach(); else if (v === 'about') h = viewAbout();
-  else if (v === 'pieces') h = viewPieces(PIECES, 'The recordings', 'Five clips. Two pupils. Discs from 1912 and 1922.');
-  else if (v === 'piece') h = viewPiece(state.id); else h = viewPerson(state.id);
-  panel.innerHTML = tabs() + h; if (focus) { panel.scrollTop = 0; const t = panel.querySelector('h2'); t.tabIndex = -1; t.focus({ preventScroll: true }); }
-  const sel = v === 'teach' ? 'liszt' : v === 'piece' ? PIECES.find(x => x.id === state.id).player : v === 'person' ? state.id : v === 'pieces' ? 'piano' : null;
-  S.select(sel); const cam = VIEW[sel || 'home']; S.rig.gy = cam[0]; S.rig.gp = cam[1];
+  document.querySelectorAll('#topics button').forEach(b => b.setAttribute('aria-pressed', b.dataset.topic === state.topic));
+  const b = $('#bubble'), q = state.list[state.idx]; const involved = new Set(); state.list.forEach(x => { involved.add(x.who); if (x.by === 'liszt') involved.add('liszt'); });
+  document.querySelectorAll('.face,.med').forEach(n => { n.classList.remove('on'); n.classList.toggle('dim', state.list.length > 0 && !involved.has(n.dataset.p)); });
+  if (!q) { b.className = ''; b.innerHTML = `<div class="tag">Weimar, the 1880s</div><div class="q">Liszt rarely told a pupil how to play a passage. He spoke in images.</div><div class="note">Choose a topic above, click a face, or take a disc from the piano.</div>`; anchor = null; sync(); return; }
+  const isL = q.by === 'liszt', d = state.disc && DISCS.find(x => x.id === state.disc), t = TOPICS.find(x => x.id === state.topic);
+  const head = isL ? `Liszt said, as ${esc(PEOPLE[q.who].name === 'Other witnesses' ? 'a witness' : PEOPLE[q.who].name)} reported it` : `${esc(q.who === 'others' ? 'A witness' : PEOPLE[q.who].name)} wrote`;
+  b.className = isL ? 'liszt' : '';
+  b.innerHTML = `<div class="tag">${t ? esc(t.label) + ' · ' : d ? esc(d.title) + ' · ' : ''}${head}</div><div class="q${q.text.length > 170 ? ' long' : ''}">“${esc(q.text)}”</div><div class="cite">${esc(q.cite)}</div>${q.note ? `<div class="note">${esc(q.note)}</div>` : ''}<div class="row">${state.list.length > 1 ? '<button type="button" class="alt" data-step="-1">Previous</button><button type="button" data-step="1">Next</button>' : ''}${q.disc && q.disc !== state.disc ? `<button type="button" data-disc="${q.disc}">♪ Hear ${esc(PEOPLE[DISCS.find(x => x.id === q.disc).player].short)} play it</button>` : ''}<span class="count">${state.idx + 1} of ${state.list.length}</span></div>`;
+  anchor = isL ? 'liszt' : q.who; el(anchor).classList.add('on'); if (isL) el(q.who).classList.add('on'); el(anchor).classList.remove('dim');
+  if (focus) b.querySelector('.q').focus?.(); sync(); drawTail();
 }
-function go(view, id) { if (state.view === 'piece' && (view !== 'piece' || id !== state.id)) audio.pause(); state.view = view; state.id = id || null; render(true); }
-function openPerson(id) { if (id === 'liszt') go('teach'); else if (id === 'piano') go('pieces'); else go('person', id); }
-panel.addEventListener('click', e => {
+let anchor = null;
+function drawTail() {
+  const ln = $('#tailLine'); if (!anchor || innerWidth <= 900) { ln.style.display = 'none'; return; } ln.style.display = '';
+  const s = $('#stage').getBoundingClientRect(), a = (el(anchor).querySelector('.pic') || el(anchor)).getBoundingClientRect(), b = $('#bubble').getBoundingClientRect();
+  const ax = a.left + a.width / 2 - s.left, ay = a.top + a.height / 2 - s.top, bx = Math.max(b.left + 30, Math.min(b.right - 30, a.left + a.width / 2)) - s.left, by = b.top - s.top;
+  const ang = Math.atan2(by - ay, bx - ax), r = a.width / 2 + 4; ln.setAttribute('x1', ax + Math.cos(ang) * r); ln.setAttribute('y1', ay + Math.sin(ang) * r); ln.setAttribute('x2', bx); ln.setAttribute('y2', by);
+}
+function setTopic(id, idx = 0) { state.topic = id; state.list = TOPICS.find(t => t.id === id).quotes; state.idx = idx; render(true); }
+function person(k) {
+  const hit = q => q.who === k || (k === 'liszt' && q.by === 'liszt');
+  if (state.list.length) { const n = state.list.length; for (let i = 1; i <= n; i++) { const j = (state.idx + i) % n; if (hit(state.list[j])) { state.idx = j; return render(true); } } }
+  for (const t of TOPICS) { const j = t.quotes.findIndex(hit); if (j > -1) return setTopic(t.id, j); }
+  const d = DISCS.find(x => x.player === k); if (d) playDisc(d.id);
+}
+document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
-  if (d.go) go(d.go); else if (d.person) openPerson(d.person); else if (d.piece) go('piece', d.piece);
-  else if (d.t) { state.tIndex = (state.tIndex + +d.t + TEACHING.length) % TEACHING.length; render(true); }
-  else if (d.play) toggle(PIECES.find(x => x.id === d.play)); else if (d.ans) { state.answers[state.id] = d.ans; render(); }
+  if (d.topic) setTopic(d.topic); else if (d.p) person(d.p); else if (d.disc) playDisc(d.disc);
+  else if (d.step) { state.idx = (state.idx + +d.step + state.list.length) % state.list.length; render(true); }
 });
-$('#aboutBtn').addEventListener('click', () => go('about'));
-$('#enter').addEventListener('click', () => { $('#intro').classList.add('hidden'); setupAudio(); render(true); });
+function modal(html) { $('#modalBody').innerHTML = html; $('#modal').classList.remove('hidden'); $('#closeModal').focus(); }
+const closeModal = () => $('#modal').classList.add('hidden');
+$('#closeModal').addEventListener('click', closeModal); $('#modal').addEventListener('click', e => { if (e.target.id === 'modal' || e.target.id === 'enter') closeModal(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+$('#aboutBtn').addEventListener('click', () => modal(`<h2 id="modalH">About and sources</h2>${ABOUT.map(([a, b]) => `<h3>${a}</h3><p>${esc(b)}</p>`).join('')}<h3>Sources</h3><ul>${LINKS.map(([t, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join('')}</ul><h3>People</h3><ul>${Object.values(PEOPLE).map(p => `<li><b>${esc(p.name)}.</b> ${esc(p.bio)}</li>`).join('')}</ul>`));
+modal(`<h2 id="modalH">An Afternoon with Liszt</h2><p>Three afternoons a week, pupils gathered at Liszt’s house in Weimar. He charged nothing. He rarely told anyone how to play a passage. He spoke in images.</p><h3>What to do</h3><p>Pick a topic at the top. Each remark appears beside the person who reported it. Gold is Liszt speaking. Then take a disc from the piano and hear one of his pupils play.</p><button type="button" class="primary" id="enter">Enter</button>`);
 
-// ---------- scene interaction
-const names = { liszt: 'Liszt', lamond: 'Lamond', dalbert: 'd’Albert', fay: 'Amy Fay', siloti: 'Siloti', piano: 'The recordings' };
-S.ids.forEach(id => { const s = document.createElement('span'); s.dataset.id = id; s.innerHTML = names[id] + (PEOPLE[id] && PEOPLE[id].recorded ? '<i>♪</i>' : ''); labels.appendChild(s); });
-let down = null;
-canvas.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY, yaw: S.rig.gy, pitch: S.rig.gp, moved: false }; canvas.setPointerCapture(e.pointerId); });
-canvas.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - down.x, dy = e.clientY - down.y; if (Math.abs(dx) + Math.abs(dy) > 6) down.moved = true; S.rig.gy = Math.max(-0.9, Math.min(0.95, down.yaw - dx * 0.005)); S.rig.gp = Math.max(0.05, Math.min(0.5, down.pitch + dy * 0.003)); });
-canvas.addEventListener('pointerup', e => { if (down && !down.moved) { const id = S.pick(e.clientX, e.clientY); if (id) openPerson(id); } down = null; });
-function layout() { const w = innerWidth, h = innerHeight, mobile = w <= 820; S.resize(w, h, mobile ? 0 : 440, mobile ? h * 0.54 : 0); }
-addEventListener('resize', layout); layout();
-
-let last = performance.now(), cap = +(new URLSearchParams(location.search).get('dtcap') || 0.1);
-function loop(now) {
-  const dt = Math.min(cap, (now - last) / 1000); last = now; let lv = 0;
-  if (analyser && !audio.paused) { analyser.getByteFrequencyData(buf); let s = 0; for (let i = 2; i < 48; i++) s += buf[i]; lv = Math.min(1, s / 46 / 110); }
-  S.setLevel(lv); S.frame(dt, reduce);
-  const pr = $('#prog'); if (pr && audio.duration) pr.style.width = (audio.currentTime / audio.duration * 100) + '%';
-  const mobile = innerWidth <= 820, topLimit = 54, bottom = mobile ? innerHeight * 0.46 : innerHeight, right = mobile ? innerWidth : innerWidth - 440;
-  for (const s of labels.children) { const p = S.screenPos(s.dataset.id); const hide = p.behind || p.y < topLimit || p.y > bottom || p.x > right - 20 || p.x < 20; s.style.opacity = hide ? 0 : 1; s.style.left = p.x + 'px'; s.style.top = p.y + 'px'; s.classList.toggle('on', s.dataset.id === (state.view === 'teach' ? 'liszt' : state.id)); }
+// ---------- loop: bars + tail
+const cv = $('#bars'), g = cv.getContext('2d');
+function loop() {
+  g.clearRect(0, 0, 220, 56);
+  if (analyser && !audio.paused) { analyser.getByteFrequencyData(buf); for (let i = 0; i < 28; i++) { const h = Math.max(2, buf[i + 1] / 255 * 54); g.fillStyle = '#e0b25a'; g.fillRect(i * 8, 56 - h, 5, h); } }
   requestAnimationFrame(loop);
 }
-render(); requestAnimationFrame(loop);
-window.__demo = { state, go, openPerson, render, toggle: id => toggle(PIECES.find(x => x.id === id)), view: () => state.view, audio, markPlayed: id => { state.played[id] = true; render(); } };
+addEventListener('resize', drawTail); $('#group').addEventListener('load', drawTail); document.fonts?.ready.then(drawTail);
+render(); loop();
+window.__demo = { state, setTopic, person, playDisc, audio, TOPICS, DISCS };
