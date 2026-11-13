@@ -11,12 +11,13 @@ export const PEOPLE = {
   dalbert: { name: 'Eugen d’Albert', short: 'd’Albert', img: C("D'albert2.jpg") + '?width=400', page: "https://commons.wikimedia.org/wiki/File:D'albert2.jpg", bio: '1864-1932. Pupil in Weimar from 1882. Recorded for Odeon in 1912.' },
   fay: { name: 'Amy Fay', short: 'Amy Fay', img: C('AMY KAY.jpg') + '?width=400', page: 'https://commons.wikimedia.org/wiki/File:AMY_KAY.jpg', bio: '1844-1928. American pupil in Weimar, 1873.' },
   mason: { name: 'William Mason', short: 'Mason', img: C('William Mason.png') + '?width=400', page: 'https://commons.wikimedia.org/wiki/File:William_Mason.png', bio: '1829-1908. American pupil in Weimar in the 1850s.' },
-  lachmund: { name: 'Carl Lachmund', short: 'Lachmund', bio: '1857-1928. American pupil in Weimar, 1882-84. Kept a diary.' },
+  lachmund: { name: 'Carl Lachmund', short: 'Lachmund', img: 'img/lachmund.jpg', bio: '1857-1928. American pupil in Weimar, 1882-84. Kept a diary.' },
+  gollerich: { name: 'August G\u00f6llerich', short: 'G\u00f6llerich', bio: '1859-1923. Pupil and secretary in Liszt\u2019s last years. Kept a diary of the classes, 1884-86.' },
   bagby: { name: 'Albert Morris Bagby', short: 'Bagby', bio: 'American pupil in Weimar.' },
   riesberg: { name: 'F. W. Riesberg', short: 'Riesberg', bio: '1863-1950. American pupil in Weimar in the mid-1880s.' },
   others: { name: 'Other witnesses', short: 'Others', bio: 'Pupils and visitors quoted once.' },
 };
-export const WALL = { left: ['lamond', 'dalbert', 'fay', 'mason'], right: ['lachmund', 'bagby', 'riesberg', 'others'] };
+export const WALL = { left: ['lamond', 'dalbert', 'fay', 'mason'], right: ['lachmund', 'gollerich', 'bagby', 'riesberg', 'others'] };
 
 // by: who is speaking. 'liszt' = Liszt's own words as reported by `who`.
 const Q = (by, who, text, cite, note, disc) => ({ by, who, text, cite, note, disc });
@@ -37,6 +38,11 @@ export const TOPICS = [
     Q('liszt', 'siloti', 'Dear child, this piece may not be brought to me; I do not allow it to be played, because in my youth it was my hobbyhorse. But since “we” are in a good mood today, I will play the sonata for you.', 'Siloti, “Meine Erinnerungen an Franz Liszt” (1913), translated for this demo', 'The “Moonlight” Sonata. Siloti had just praised Anton Rubinstein’s playing of it.', 'moon1'),
     Q('siloti', 'siloti', 'When, after four bars, the G sharp entered in the right hand, I understood nothing any more. He did not bring this G sharp out, but it was a tone unknown to me, which I still hear clearly now, after 27 years.', 'Siloti, “Meine Erinnerungen” (1913), translated for this demo', 'The room was small and carpeted, 35 to 40 people were in it, and the grand was worn and out of tune.', 'moon1'),
     Q('siloti', 'siloti', 'He played the whole first movement, then the second; the third he only began, and said that he was too old and did not have enough physical strength to play this movement.', 'Siloti, “Meine Erinnerungen” (1913), translated for this demo', null, 'moon3'),
+    Q('fay', 'fay', 'Perhaps it is because he feels obliged to be conscientious in teaching Beethoven!', 'Fay, Music-Study in Germany (1883 printing), 238', 'Fay on why pupils rarely dared bring him a Beethoven sonata.'),
+    Q('fay', 'fay', 'He always teaches Beethoven with notes which shows how scrupulous he is about him for, of course, he knows all the sonatas by heart. He has B\u00fclow\u2019s edition, which he opens and lays in the end of the grand piano.', 'Fay, Music-Study in Germany, as quoted in Bowen, draft chapter \u201cLiszt and the New Style\u201d'),
+    Q('liszt', 'gollerich', 'This piece, like scarcely any other, is a remarkable example of how precisely the unique Beethoven indicated everything. Three or four different markings are found in every bar. Not as in Bach.', 'G\u00f6llerich, diary of the master classes, as quoted in Bowen, draft chapter; page not given there', 'In a class where Rosenthal played Liszt\u2019s transcription of the Scherzo from the Ninth Symphony.'),
+    Q('lachmund', 'lachmund', 'Someone wanted to play something by Bach or Beethoven, Liszt became deeply serious.', 'Lachmund, as quoted in Bowen, draft chapter; page not given there', 'Lachmund adds that Liszt followed the score when either was played.'),
+    Q('liszt', 'others', 'Must be played without much nuance.', 'Quoted in Bowen, draft chapter; source not given there', 'On the opening of Beethoven\u2019s Piano Concerto in G major.'),
     Q('liszt', 'others', 'No! No! No! We know that. Come again and bring something new.', 'Otis Boise; Bowen, note 126', 'To a pupil who brought Beethoven’s Violin Sonata, Op. 24.'),
     Q('lamond', 'lamond', 'The poetical vision always arose before his mental eye, whether it was a Beethoven Sonata, a Chopin nocturne, or a work of his own.', 'Lamond, Memoirs; Bowen, note 183'),
   ] },
@@ -76,7 +82,7 @@ export const ABOUT = [
   ['What is real', 'Every quotation is from a published account by someone who was there. Most wording is taken from José Antonio Bowen, “Liszt the Teacher,” Journal of the American Liszt Society 52/53 (2002/03), with its page citations. Siloti on the “Moonlight” and Fay on Au bord d’une source were read in the 1913 and 1883 printings. Siloti’s German is translated for this demo.'],
   ['Liszt’s words and his pupils’ words', 'A gold bubble is Liszt speaking, as a pupil wrote it down. A cream bubble is the pupil speaking about him. No recording of Liszt exists.'],
   ['The recordings', 'Clips from discs by two pupils: Frederic Lamond (HMV, 1922) and Eugen d’Albert (Odeon, 1 July 1912), from transfers at the Internet Archive. They were made 30 to 36 years after the lessons. Liszt is not recorded commenting on them.'],
-  ['The photographs', 'The group photograph is by Louis Held (1851-1927) and shows Liszt with pupils in Weimar; names follow the Wikimedia Commons caption. The file is a later colorized copy, shown here in sepia. Lamond, d’Albert, Fay and Mason are separate portraits from Wikimedia Commons. Lamond and d’Albert are not in the group photograph. People shown by initials have no portrait here.'],
+  ['The photographs', 'The portrait of Carl Lachmund was supplied by Jos\u00e9 Antonio Bowen. The group photograph is by Louis Held (1851-1927) and shows Liszt with pupils in Weimar; names follow the Wikimedia Commons caption. The file is a later colorized copy, shown here in sepia. Lamond, d’Albert, Fay and Mason are separate portraits from Wikimedia Commons. Lamond and d’Albert are not in the group photograph. People shown by initials have no portrait here.'],
   ['How it was made', 'Built with Claude Fable 5.2 from José Antonio Bowen’s research. No tracking.'],
 ];
 export const LINKS = [
