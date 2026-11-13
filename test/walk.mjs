@@ -14,7 +14,7 @@ for (const [name, w, h] of [['desk', 1600, 900], ['lap', 1280, 720], ['phone', 3
   await shot('0intro'); await pg.click('#enter'); await shot('1home');
   let seen = 0;
   for (const t of await pg.evaluate(() => __demo.TOPICS.map(t => [t.id, t.quotes.length]))) { await pg.click(`[data-topic="${t[0]}"]`); for (let i = 0; i < t[1]; i++) { seen++; const fits = await pg.evaluate(() => { const b = document.querySelector('#bubble').getBoundingClientRect(); return innerWidth <= 900 || (b.top > 60 && b.bottom < innerHeight); }); if (!fits) errs.push(`${name} bubble overflow ${t[0]} ${i}`); if (t[0] === 'beethoven' && i === 0) await shot('2beeth'); if (t[0] === 'images' && i === 1) await shot('3images'); if (t[1] > 1) await pg.click('[data-step="1"]'); } }
-  await pg.click('[data-disc="source"]'); await wait(1500); await shot('4disc');
+  await pg.click('[data-disc="mazeppa"]'); await wait(400); await pg.click('[data-disc="source"]'); await wait(1500); await shot('4disc');
   const st = await pg.evaluate(() => ({ ok: __demo.state.clipOk.source, t: __demo.audio.currentTime }));
   for (const d of ['moon1', 'moon3', 'waltz', 'weber']) { await pg.click(`[data-disc="${d}"]`); await wait(300); }
   await pg.evaluate(() => __demo.person('fay')); await pg.evaluate(() => __demo.person('liszt')); await pg.evaluate(() => __demo.person('dalbert'));

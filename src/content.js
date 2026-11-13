@@ -6,6 +6,7 @@ export const PHOTO = { src: C('Liszt and his students.jpg') + '?width=1600', pag
 export const PEOPLE = {
   liszt: { name: 'Franz Liszt', short: 'Liszt', at: [52.4, 33.5], bio: '1811-1886. He taught in Weimar three afternoons a week and took no fee.' },
   siloti: { name: 'Alexander Siloti', short: 'Siloti', at: [23, 42], bio: '1863-1945. Pupil in Weimar, 1883-86. Front row, second from left.' },
+  sauer: { name: 'Emil von Sauer', short: 'Sauer', at: [58, 42], bio: '1862-1942. Pupil in Weimar, 1884-85. Front row, fourth from left.' },
   friedheim: { name: 'Arthur Friedheim', short: 'Friedheim', at: [43.7, 46], bio: '1859-1932. Pupil in Weimar in the 1880s. Front row, third from left.' },
   lamond: { name: 'Frederic Lamond', short: 'Lamond', img: C('Lamond 1898.jpg') + '?width=400', page: 'https://commons.wikimedia.org/wiki/File:Lamond_1898.jpg', bio: '1868-1948. Pupil in Weimar, 1885-86. Recorded from 1919.' },
   dalbert: { name: 'Eugen d’Albert', short: 'd’Albert', img: C("D'albert2.jpg") + '?width=400', page: "https://commons.wikimedia.org/wiki/File:D'albert2.jpg", bio: '1864-1932. Pupil in Weimar from 1882. Recorded for Odeon in 1912.' },
@@ -13,7 +14,7 @@ export const PEOPLE = {
   mason: { name: 'William Mason', short: 'Mason', img: C('William Mason.png') + '?width=400', page: 'https://commons.wikimedia.org/wiki/File:William_Mason.png', bio: '1829-1908. American pupil in Weimar in the 1850s.' },
   lachmund: { name: 'Carl Lachmund', short: 'Lachmund', img: 'img/lachmund.jpg', bio: '1857-1928. American pupil in Weimar, 1882-84. Kept a diary.' },
   gollerich: { name: 'August G\u00f6llerich', short: 'G\u00f6llerich', bio: '1859-1923. Pupil and secretary in Liszt\u2019s last years. Kept a diary of the classes, 1884-86.' },
-  bagby: { name: 'Albert Morris Bagby', short: 'Bagby', bio: 'American pupil in Weimar.' },
+  bagby: { name: 'Albert Morris Bagby', short: 'Bagby', img: 'img/bagby.jpg', bio: 'American pupil in Weimar.' },
   riesberg: { name: 'F. W. Riesberg', short: 'Riesberg', bio: '1863-1950. American pupil in Weimar in the mid-1880s.' },
   others: { name: 'Other witnesses', short: 'Others', bio: 'Pupils and visitors quoted once.' },
 };
@@ -43,6 +44,10 @@ export const TOPICS = [
     Q('liszt', 'gollerich', 'This piece, like scarcely any other, is a remarkable example of how precisely the unique Beethoven indicated everything. Three or four different markings are found in every bar. Not as in Bach.', 'G\u00f6llerich, diary of the master classes, as quoted in Bowen, draft chapter; page not given there', 'In a class where Rosenthal played Liszt\u2019s transcription of the Scherzo from the Ninth Symphony.'),
     Q('lachmund', 'lachmund', 'Someone wanted to play something by Bach or Beethoven, Liszt became deeply serious.', 'Lachmund, as quoted in Bowen, draft chapter; page not given there', 'Lachmund adds that Liszt followed the score when either was played.'),
     Q('liszt', 'others', 'Must be played without much nuance.', 'Quoted in Bowen, draft chapter; source not given there', 'On the opening of Beethoven\u2019s Piano Concerto in G major.'),
+    Q('liszt', 'others', 'This is the way it should be played.', 'Walter Damrosch, My Musical Life (1923), 39-40', 'A pupil had botched the introduction of a Beethoven sonata in E flat. Damrosch says Liszt gently pushed her off the chair and played it himself.'),
+    Q('others', 'others', 'The music seemed to just drop from his fingers onto the piano keys.', 'Walter Damrosch, My Musical Life (1923), 39-40', 'Damrosch, visiting the class, on Liszt playing the opening of that sonata.'),
+    Q('liszt', 'others', 'So, blamieren Sie sich noch einmal.', 'Walter Damrosch, My Musical Life (1923), 39-40', '\u201cNow, make a fool of yourself again.\u201d Damrosch\u2019s translation. She had tried a second time.'),
+    Q('mason', 'mason', 'In the afternoon I had played during my lesson with Liszt the C Sharp Minor Sonata of Beethoven and the E Minor Fugue by Handel.', 'Mason, Memories of a Musical Life, 123-24, from his Weimar diary', 'The C sharp minor Sonata is the \u201cMoonlight.\u201d Mason studied with Liszt in the 1850s.', 'moon1'),
     Q('liszt', 'others', 'No! No! No! We know that. Come again and bring something new.', 'Otis Boise; Bowen, note 126', 'To a pupil who brought Beethoven’s Violin Sonata, Op. 24.'),
     Q('lamond', 'lamond', 'The poetical vision always arose before his mental eye, whether it was a Beethoven Sonata, a Chopin nocturne, or a work of his own.', 'Lamond, Memoirs; Bowen, note 183'),
   ] },
@@ -75,6 +80,12 @@ export const DISCS = [
   { id: 'source', composer: 'Liszt', title: 'Au bord d’une source', part: 'Opening', player: 'dalbert', year: 1912, gap: 30, label: 'Odeon XX 76940', clip: 'clips/dalbert-au-bord.mp3',
     quotes: [Q('fay', 'fay', 'I was nervous and played badly. He … acted as if he thought I had played charmingly, and then he sat down and played the whole piece himself, oh, so exquisitely! It made me feel like a wood-chopper.', 'Fay, Music-Study in Germany, letter from Weimar, 1873', 'Fay had prepared Au bord d’une source for him.'), Q('fay', 'fay', 'He suddenly took an unexpected chord and extemporized a poetical little end, quite different from the written one.', 'Fay, Music-Study in Germany, same letter')] },
   { id: 'waltz', composer: 'Chopin', title: 'Waltz in A flat, Op. 42', part: 'Opening', player: 'dalbert', year: 1912, gap: 30, label: 'Odeon XX 76937', clip: 'clips/dalbert-chopin-waltz.mp3', topic: 'chopin' },
+  { id: 'rhap2', composer: 'Liszt', title: 'Hungarian Rhapsody No. 2', part: 'Opening', player: 'friedheim', when: 'Duo-Art roll', label: 'Duo-Art piano roll', info: 'Duo-Art piano roll, from the LP Everest X-925. Roll date not given.', clip: 'clips/friedheim-rhapsody2-roll.mp3',
+    quotes: [Q('siloti', 'siloti', 'His Second Rhapsody, as the one played too often.', 'Siloti, \u201cMeine Erinnerungen\u201d (1913), translated for this demo', 'From Siloti\u2019s list of pieces one could not play for Liszt. Friedheim, who plays it here, also names the Rhapsody as excluded (Bowen, note 125).')] },
+  { id: 'stfrancis', composer: 'Liszt', title: 'St. Francis of Paola Walking on the Waves', short: 'L\u00e9gende No. 2', part: 'Opening', player: 'friedheim', when: 'Duo-Art roll', label: 'Duo-Art piano roll', info: 'Duo-Art piano roll, from the LP Everest X-925. Roll date not given.', clip: 'clips/friedheim-stfrancis-roll.mp3', topic: 'soul' },
+  { id: 'liebes', composer: 'Liszt', title: 'Liebestraum No. 3', part: 'Opening', player: 'dalbert', when: 'Welte roll, 1905', label: 'Welte-Mignon piano roll, 1905', info: 'Welte-Mignon piano roll, 1905, about 23 years after his lessons. Played back and recorded for Telefunken, 1971.', clip: 'clips/dalbert-liebestraum-roll.mp3', topic: 'images' },
+  { id: 'valse', composer: 'Liszt', title: 'Valse-Impromptu', part: 'Opening', player: 'dalbert', when: 'Welte roll, 1905', label: 'Welte-Mignon piano roll, 1905', info: 'Welte-Mignon piano roll, 1905, about 23 years after his lessons. Played back and recorded for Telefunken, 1971.', clip: 'clips/dalbert-valse-roll.mp3', topic: 'freedom' },
+  { id: 'mazeppa', composer: 'Liszt', title: 'Mazeppa', short: 'Mazeppa (Transcendental Etude No. 4)', part: 'Opening', player: 'sauer', when: 'Welte roll, 1905', label: 'Welte-Mignon piano roll, 1905', info: 'Welte-Mignon piano roll, 1905, about 20 years after his lessons. Played back and recorded for Telefunken, 1971.', clip: 'clips/sauer-mazeppa-roll.mp3', topic: 'body' },
   { id: 'weber', composer: 'Weber', title: 'Invitation to the Dance', part: 'Opening', player: 'dalbert', year: 1912, gap: 30, label: 'Odeon XX 76933', clip: 'clips/dalbert-weber.mp3', topic: 'freedom' },
 ];
 
@@ -82,7 +93,8 @@ export const ABOUT = [
   ['What is real', 'Every quotation is from a published account by someone who was there. Most wording is taken from José Antonio Bowen, “Liszt the Teacher,” Journal of the American Liszt Society 52/53 (2002/03), with its page citations. Siloti on the “Moonlight” and Fay on Au bord d’une source were read in the 1913 and 1883 printings. Siloti’s German is translated for this demo.'],
   ['Liszt’s words and his pupils’ words', 'A gold bubble is Liszt speaking, as a pupil wrote it down. A cream bubble is the pupil speaking about him. No recording of Liszt exists.'],
   ['The recordings', 'Clips from discs by two pupils: Frederic Lamond (HMV, 1922) and Eugen d’Albert (Odeon, 1 July 1912), from transfers at the Internet Archive. They were made 30 to 36 years after the lessons. Liszt is not recorded commenting on them.'],
-  ['The photographs', 'The portrait of Carl Lachmund was supplied by Jos\u00e9 Antonio Bowen. The group photograph is by Louis Held (1851-1927) and shows Liszt with pupils in Weimar; names follow the Wikimedia Commons caption. The file is a later colorized copy, shown here in sepia. Lamond, d’Albert, Fay and Mason are separate portraits from Wikimedia Commons. Lamond and d’Albert are not in the group photograph. People shown by initials have no portrait here.'],
+  ['The piano rolls', 'Five clips are piano rolls: d\u2019Albert and Sauer for Welte-Mignon in 1905, and Friedheim for Duo-Art. A roll records the keys and pedals, not the sound. It is played back later on a reproducing piano. These playbacks come from two LPs at the Internet Archive: Telefunken SLA 25 057 (1971) and Everest X-925.'],
+  ['The photographs', 'The portraits of Carl Lachmund and Albert Morris Bagby were supplied by Jos\u00e9 Antonio Bowen. The group photograph is by Louis Held (1851-1927) and shows Liszt with pupils in Weimar; names follow the Wikimedia Commons caption. The file is a later colorized copy, shown here in sepia. Lamond, d’Albert, Fay and Mason are separate portraits from Wikimedia Commons. Lamond and d’Albert are not in the group photograph. People shown by initials have no portrait here.'],
   ['How it was made', 'Built with Claude Fable 5.2 from José Antonio Bowen’s research. No tracking.'],
 ];
 export const LINKS = [
@@ -90,6 +102,8 @@ export const LINKS = [
   ['Bowen and Bomberger, annotated bibliography of sources (PDF)', 'https://weteachwithai.com/wp-content/uploads/2026/11/BowenBomberger-Liszt-Teaching-Sources-Biblio-FINAL.pdf'],
   ['Lamond, “Moonlight” Sonata, HMV D 718-719, 1922 (Internet Archive)', 'https://archive.org/details/1922-moonlight-sonata-c-sharp-minor-beethoven-frederic-lamond-hmv-d-718-3-sides'],
   ['d’Albert, Odeon, 1912 (Internet Archive)', 'https://archive.org/details/1-eugen-d-albert-odeon-xx-76933-weber-1912'],
+  ['Welte-Mignon 1905, Liszt pupils, Telefunken LP (Internet Archive)', 'https://archive.org/details/05-welte-mignon-1905-liszt-pupils-telefunken-sla-25-057-t-3_202106'],
+  ['Friedheim, Duo-Art rolls, Everest X-925 (Internet Archive)', 'https://archive.org/details/07-liszt-the-bird-sermon-legende-no-1'],
   ['Group photograph by Louis Held (Wikimedia Commons)', PHOTO.page],
   ['Portrait of Lamond (Wikimedia Commons)', PEOPLE.lamond.page], ['Portrait of d’Albert (Wikimedia Commons)', PEOPLE.dalbert.page], ['Portrait of Amy Fay (Wikimedia Commons)', PEOPLE.fay.page], ['Portrait of William Mason (Wikimedia Commons)', PEOPLE.mason.page],
 ];

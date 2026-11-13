@@ -10,7 +10,7 @@ $('#topics').innerHTML = TOPICS.map(t => `<button type="button" data-topic="${t.
 $('#faces').innerHTML = Object.entries(PEOPLE).filter(([, p]) => p.at).map(([k, p]) => `<button type="button" class="face" data-p="${k}" style="left:${p.at[0]}%;top:${p.at[1]}%" aria-label="${esc(p.name)}"><b>${esc(p.short)}</b></button>`).join('');
 const med = k => { const p = PEOPLE[k]; const ini = k === 'others' ? '\u2026' : p.name.split(' ').map(w => w[0]).join('').slice(0, 2); return `<button type="button" class="med" data-p="${k}"><div class="pic"${p.img ? ` style="background-image:url('${p.img.replace(/'/g, '%27')}')"` : ''}>${p.img ? '' : ini}</div><span>${esc(p.short)}</span></button>`; };
 $('#wallL').innerHTML = WALL.left.map(med).join(''); $('#wallR').innerHTML = WALL.right.map(med).join('');
-$('#discs').innerHTML = DISCS.map(d => `<button type="button" class="disc" data-disc="${d.id}" style="--lab:${LAB[d.composer]}"><i></i><div><b>${esc(d.composer)}</b><span>${esc(d.short || d.title)}</span><span>${esc(PEOPLE[d.player].short)}, ${d.year}</span></div></button>`).join('');
+$('#discs').innerHTML = DISCS.map(d => `<button type="button" class="disc" data-disc="${d.id}" style="--lab:${LAB[d.composer]}"><i></i><div><b>${esc(d.composer)}</b><span>${esc(d.short || d.title)}</span><span>${esc(PEOPLE[d.player].short)}, ${esc(String(d.when || d.year))}</span></div></button>`).join('');
 const el = k => document.querySelector(`[data-p="${k}"]`);
 
 // ---------- audio
@@ -30,7 +30,7 @@ function sync() {
   document.querySelectorAll('.med').forEach(m => m.classList.remove('playing'));
   const d = DISCS.find(x => x.id === state.disc); if (!d) { $('#nowText').textContent = 'Choose a disc to hear a pupil play.'; return; }
   if (!audio.paused) el(d.player).classList.add('playing');
-  $('#nowText').innerHTML = state.clipOk[d.id] === false ? 'This clip could not be loaded.' : `<b style="color:var(--gold)">${esc(PEOPLE[d.player].name)}</b> ${audio.paused ? 'played' : 'plays'} ${esc(d.title)}. ${esc(d.part)}. ${esc(d.label)}, ${d.year}, about ${d.gap} years after his lessons.`;
+  $('#nowText').innerHTML = state.clipOk[d.id] === false ? 'This clip could not be loaded.' : `<b style="color:var(--gold)">${esc(PEOPLE[d.player].name)}</b> ${audio.paused ? 'played' : 'plays'} ${esc(d.title)}. ${esc(d.part)}. ${esc(d.info || (d.label + ', ' + d.year + ', about ' + d.gap + ' years after his lessons.'))}`;
 }
 
 // ---------- bubble
