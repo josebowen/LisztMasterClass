@@ -15,4 +15,4 @@ Live: https://josebowen.github.io/LisztMasterclass/ . More demos: https://weteac
 | lamond-moonlight-3.mp3 | Lamond 1922, third movement, first 30 s |
 | dalbert-au-bord.mp3 | d'Albert 1912, Au bord d'une source, first 35 s |
 | dalbert-chopin-waltz.mp3 | d'Albert 1912, Chopin Waltz Op. 42, first 35 s |
-| dalbert-weber.mp3 | d'Albert 1912, Weber, start of the waltz, 35 s |
+| dalbert-weber.mp3 | d'Albert 1912, Weber, first 40 s |

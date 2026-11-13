@@ -68,7 +68,7 @@ export const PIECES = [
     ],
   },
   {
-    id: 'weber', composer: 'Weber', title: 'Aufforderung zum Tanz (Invitation to the Dance), Op. 65', part: 'The waltz begins',
+    id: 'weber', composer: 'Weber', title: 'Aufforderung zum Tanz (Invitation to the Dance), Op. 65', part: 'Opening',
     player: 'dalbert', year: 1912, age: 48, gap: 30, label: 'Odeon XX 76933', src: 'iaAlbert', clip: 'clips/dalbert-weber.mp3',
     said: [
       { kind: 'general', who: 'mason', text: 'Don\'t play it that way. Play it like this.', cite: 'Mason, Memories, 99', via: 'bowen', note: 'Mason says Liszt would sometimes push a pupil off the chair to show a passage.' },
