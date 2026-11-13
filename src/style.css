@@ -11,7 +11,7 @@ button:hover,button:focus-visible{border-color:var(--gold);outline:none}
 #stage{position:relative;display:flex;justify-content:center;align-items:stretch;gap:18px;padding:14px 20px;min-height:0}
 .wall{display:flex;flex-direction:column;justify-content:space-around;align-items:center;width:150px;flex:none}
 .med{background:none;border:0;padding:0;border-radius:0;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--paper);transition:transform .35s}
-.med .pic{width:104px;height:124px;border-radius:50%;border:4px solid #7b5a2c;box-shadow:0 0 0 2px #2b1c0c,0 8px 18px #000a;background:#4b3520 center 20%/cover;filter:sepia(.9) contrast(1.05);display:grid;place-items:center;font:600 34px Fraunces,serif;color:#e9d6ad}
+.med .pic{height:min(124px,13.5vh);aspect-ratio:104/124;width:auto;border-radius:50%;border:4px solid #7b5a2c;box-shadow:0 0 0 2px #2b1c0c,0 8px 18px #000a;background:#4b3520 center 20%/cover;filter:sepia(.9) contrast(1.05);display:grid;place-items:center;font:600 34px Fraunces,serif;color:#e9d6ad}
 .med span{font-size:14px;color:var(--mute)}.med.on .pic{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold),0 0 28px #e0b25a99}.med.on span{color:var(--gold)}
 .med.playing{transform:scale(1.28)}.med.dim,.face.dim{opacity:.45}
 #photoWrap{flex:0 1 auto;height:100%;aspect-ratio:1600/1122;max-width:calc(100% - 340px);align-self:center;max-height:100%}
@@ -35,13 +35,13 @@ button:hover,button:focus-visible{border-color:var(--gold);outline:none}
 #keys:after{content:"";position:absolute;inset:0 0 6px;background:repeating-linear-gradient(90deg,transparent 0 11px,#15100b 11px 20px,transparent 20px 27px,#15100b 27px 36px,transparent 36px 59px,#15100b 59px 68px,transparent 68px 75px,#15100b 75px 84px,transparent 84px 91px,#15100b 91px 100px,transparent 100px 112px)}
 #lid{background:linear-gradient(#1d150e,#0b0806);border:1px solid #3b2a17;border-radius:0 0 26px 26px;box-shadow:inset 0 2px 0 #5a4326,0 10px 30px #000a;padding:8px 22px 12px;display:grid;grid-template-columns:1fr auto;gap:4px 20px;align-items:center}
 .lidlabel{grid-column:1/-1;font-size:13px;color:var(--mute);letter-spacing:.05em;text-transform:uppercase}
-#discs{display:flex;gap:18px;overflow-x:auto;padding:4px 2px}
+#discs{display:flex;gap:14px;overflow-x:auto;padding:4px 2px;scrollbar-width:none}#discs::-webkit-scrollbar{display:none}
 .disc{background:none;border:0;border-radius:0;padding:0;display:flex;align-items:center;gap:10px;text-align:left;color:var(--paper);flex:none}
-.disc i{width:74px;height:74px;border-radius:50%;flex:none;background:radial-gradient(circle,#1a120b 0 5%,var(--lab,#8a2a22) 6% 34%,#000 35%),#000;background:radial-gradient(circle,#1a120b 0 5%,var(--lab,#8a2a22) 6% 34%,transparent 35%),repeating-radial-gradient(circle,#0a0a0a 0 2px,#262626 2px 3px);box-shadow:0 4px 10px #000c,inset 0 0 0 1px #444}
-.disc b{display:block;font:600 17px Fraunces,serif}.disc span{font-size:13px;color:var(--mute);display:block}
+.disc i{width:62px;height:62px;border-radius:50%;flex:none;background:radial-gradient(circle,#1a120b 0 5%,var(--lab,#8a2a22) 6% 34%,#000 35%),#000;background:radial-gradient(circle,#1a120b 0 5%,var(--lab,#8a2a22) 6% 34%,transparent 35%),repeating-radial-gradient(circle,#0a0a0a 0 2px,#262626 2px 3px);box-shadow:0 4px 10px #000c,inset 0 0 0 1px #444}
+.disc b{display:block;font:600 16px Fraunces,serif}.disc{max-width:215px}.disc span{font-size:13px;color:var(--mute);display:block}
 .disc.on i{animation:spin 1.8s linear infinite;box-shadow:0 0 0 2px var(--gold),0 0 22px #e0b25aaa}.disc.on b{color:var(--gold)}.disc.paused i{animation-play-state:paused}
 @keyframes spin{to{transform:rotate(360deg)}}
-#now{display:flex;align-items:center;gap:12px;min-width:240px;justify-content:flex-end}#nowText{font-size:14px;color:var(--mute);max-width:260px}
+#now{display:flex;align-items:center;gap:12px;justify-content:flex-end}#nowText{font-size:14px;color:var(--mute);max-width:230px}#bars{width:120px;height:44px}
 #modal{position:fixed;inset:0;background:#000b;display:grid;place-items:center;z-index:9;padding:20px}
 #modal .card{background:#20170e;border:1px solid var(--line);border-radius:18px;max-width:760px;max-height:88vh;overflow:auto;padding:28px 32px;position:relative}
 #modal h2{font-size:30px;margin-bottom:6px}#modal h3{color:var(--gold);font-size:19px;margin:18px 0 4px}#modal p{margin:0}#modal a{color:var(--gold)}#modal ul{padding-left:20px}#modal li{margin:6px 0}

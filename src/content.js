@@ -64,8 +64,8 @@ export const TOPICS = [
 ];
 
 export const DISCS = [
-  { id: 'moon1', composer: 'Beethoven', title: '“Moonlight” Sonata', part: 'First movement, opening', player: 'lamond', year: 1922, gap: 36, label: 'HMV D 718', clip: 'clips/lamond-moonlight-1.mp3', topic: 'beethoven' },
-  { id: 'moon3', composer: 'Beethoven', title: '“Moonlight” Sonata', part: 'Third movement, opening', player: 'lamond', year: 1922, gap: 36, label: 'HMV D 719', clip: 'clips/lamond-moonlight-3.mp3', topic: 'beethoven' },
+  { id: 'moon1', composer: 'Beethoven', title: '“Moonlight” Sonata', short: '\u201cMoonlight,\u201d 1st movement', part: 'First movement, opening', player: 'lamond', year: 1922, gap: 36, label: 'HMV D 718', clip: 'clips/lamond-moonlight-1.mp3', topic: 'beethoven' },
+  { id: 'moon3', composer: 'Beethoven', title: '“Moonlight” Sonata', short: '\u201cMoonlight,\u201d 3rd movement', part: 'Third movement, opening', player: 'lamond', year: 1922, gap: 36, label: 'HMV D 719', clip: 'clips/lamond-moonlight-3.mp3', topic: 'beethoven' },
   { id: 'source', composer: 'Liszt', title: 'Au bord d’une source', part: 'Opening', player: 'dalbert', year: 1912, gap: 30, label: 'Odeon XX 76940', clip: 'clips/dalbert-au-bord.mp3',
     quotes: [Q('fay', 'fay', 'I was nervous and played badly. He … acted as if he thought I had played charmingly, and then he sat down and played the whole piece himself, oh, so exquisitely! It made me feel like a wood-chopper.', 'Fay, Music-Study in Germany, letter from Weimar, 1873', 'Fay had prepared Au bord d’une source for him.'), Q('fay', 'fay', 'He suddenly took an unexpected chord and extemporized a poetical little end, quite different from the written one.', 'Fay, Music-Study in Germany, same letter')] },
   { id: 'waltz', composer: 'Chopin', title: 'Waltz in A flat, Op. 42', part: 'Opening', player: 'dalbert', year: 1912, gap: 30, label: 'Odeon XX 76937', clip: 'clips/dalbert-chopin-waltz.mp3', topic: 'chopin' },

@@ -8,9 +8,9 @@ const LAB = { Beethoven: '#7d2a22', Liszt: '#1f4a3a', Chopin: '#27406b', Weber: 
 $('#group').src = PHOTO.src;
 $('#topics').innerHTML = TOPICS.map(t => `<button type="button" data-topic="${t.id}" aria-pressed="false">${esc(t.label)}</button>`).join('');
 $('#faces').innerHTML = Object.entries(PEOPLE).filter(([, p]) => p.at).map(([k, p]) => `<button type="button" class="face" data-p="${k}" style="left:${p.at[0]}%;top:${p.at[1]}%" aria-label="${esc(p.name)}"><b>${esc(p.short)}</b></button>`).join('');
-const med = k => { const p = PEOPLE[k]; const ini = p.name.split(' ').map(w => w[0]).join('').slice(0, 2); return `<button type="button" class="med" data-p="${k}"><div class="pic"${p.img ? ` style="background-image:url('${p.img.replace(/'/g, '%27')}')"` : ''}>${p.img ? '' : ini}</div><span>${esc(p.short)}</span></button>`; };
+const med = k => { const p = PEOPLE[k]; const ini = k === 'others' ? '\u2026' : p.name.split(' ').map(w => w[0]).join('').slice(0, 2); return `<button type="button" class="med" data-p="${k}"><div class="pic"${p.img ? ` style="background-image:url('${p.img.replace(/'/g, '%27')}')"` : ''}>${p.img ? '' : ini}</div><span>${esc(p.short)}</span></button>`; };
 $('#wallL').innerHTML = WALL.left.map(med).join(''); $('#wallR').innerHTML = WALL.right.map(med).join('');
-$('#discs').innerHTML = DISCS.map(d => `<button type="button" class="disc" data-disc="${d.id}" style="--lab:${LAB[d.composer]}"><i></i><div><b>${esc(d.composer)}</b><span>${esc(d.title)}</span><span>${esc(PEOPLE[d.player].short)}, ${d.year}</span></div></button>`).join('');
+$('#discs').innerHTML = DISCS.map(d => `<button type="button" class="disc" data-disc="${d.id}" style="--lab:${LAB[d.composer]}"><i></i><div><b>${esc(d.composer)}</b><span>${esc(d.short || d.title)}</span><span>${esc(PEOPLE[d.player].short)}, ${d.year}</span></div></button>`).join('');
 const el = k => document.querySelector(`[data-p="${k}"]`);
 
 // ---------- audio
